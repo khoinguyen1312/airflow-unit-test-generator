@@ -2,7 +2,7 @@
 
 ## About
 
-This is an end to end solution for generating test of Airflow's Operator using Docker, docker-compose solution
+This is an Docker solution for generating test of Airflow's Operator. Which would help you generate simple Airflow Unittest without having acttually install Airflow.
 
 ## How to run it
 
@@ -26,3 +26,9 @@ Try something like:
 - Check code different by Git tools or simply `git diff`.
 - Now, we should see the different in `pytest/airflow/dags/auto_generate_result/code/echo_dag_auto_test.py`.
 
+![Generate Test](./generate_test.gif)
+
+## Commands
+
+- `tools/scripts/gen_dag_test.sh` Allow you to generate test and keep airflow running at <http://localhost:8080> for checking for DAG.
+- `tools/scripts/gen_dag_test.sh down` Allow you to remove docker container after test generating.
