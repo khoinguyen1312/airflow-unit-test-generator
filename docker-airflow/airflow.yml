@@ -1,0 +1,28 @@
+# This docker-compose help provide service airflow with configuration
+
+version: '2.1'
+
+volumes:
+  shared-volume-cfg:
+  shared-volume-dags:
+  shared-volume-py:
+  shared-volume-jars:
+  shared-volume-variables:
+
+services:
+  airflow:
+    image: puckel/docker-airflow
+    restart: always
+    environment:
+      - LOAD_EX=n
+      - EXECUTOR=Celery
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+      - PYTHONPATH=/usr/local/airflow/py
+    volumes:
+      - shared-volume-cfg:/usr/local/airflow/cfg/code
+      - shared-volume-dags:/usr/local/airflow/dags/code
+      - shared-volume-py:/usr/local/airflow/py
+      - shared-volume-jars:/usr/local/airflow/jars
+      - shared-volume-variables:/usr/local/airflow/variables

@@ -1,0 +1,30 @@
+# This docker help to generate Airflow's Unit Test
+# To generate unit test, you first have to do these steps:
+#    - change directory to momo/dataplatform/docker-airflow
+#    - execute `docker pull asia.gcr.io/momovn-dev/airflow:1.10.3`
+#    - execute `docker tag <image_id_of_1.10.3> airflow_code:running`
+#    - execute `docker-compose -f docker-compose-UnitTestGenerator.yml up -d`
+#    - Wait until docker containers is healthy
+#    - ssh to webserver container using `docker exec -it dockerairflow_webserver_1 bash`
+#    - execute `$RUN_TEST`
+
+version: '2.1'
+
+services:
+  webserver:
+    container_name: airflow_webserver
+    extends:
+      file: airflow.yml
+      service: airflow
+    environment:
+      - RUN_TEST=python /usr/local/airflow/pythontest/airflow/generator/unit_test_generator.py --dag_folder /usr/local/airflow/dags/ --output_folder /usr/local/airflow/pythontest/airflow/dags/auto_generate_result
+    volumes:
+      - ../pytest:/usr/local/airflow/pythontest
+    ports:
+      - "8080:8080"
+    command: webserver
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
+      interval: 2s
+      timeout: 5s
+      retries: 3

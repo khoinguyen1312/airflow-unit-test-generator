@@ -1,0 +1,45 @@
+# This docker-compose serve airflow with other neccessart component
+# airflow_code stand for image which is build for CI/CD purpose, which is used
+#  - As code Storage for airflow_webserver
+#  - As image for publishing new platform's version
+
+version: '2.1'
+
+volumes:
+  shared-volume-cfg:
+  shared-volume-dags:
+  shared-volume-py:
+  shared-volume-jars:
+  shared-volume-variables:
+
+services:
+
+  redis:
+    container_name: airflow_redis
+    image: 'redis:3.2.7'
+    restart: always
+
+  postgres:
+    container_name: airflow_postgres
+    image: postgres:9.6
+    restart: always
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+
+  code:
+    container_name: airflow_code
+    image: airflow_code:running
+    volumes:
+      - shared-volume-dags:/root/deploy/dags
+      - shared-volume-cfg:/root/deploy/cfg
+      - shared-volume-py:/root/deploy/py
+      - shared-volume-jars:/root/deploy/jars
+      - shared-volume-variables:/root/deploy/variables
+    tty: true
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f /root/airflow/done.txt ]"]
+      interval: 5s
+      timeout: 5s
+      retries: 1

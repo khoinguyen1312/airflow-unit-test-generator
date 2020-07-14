@@ -1,0 +1,30 @@
+# This Dockerfile allow to build an docker image which contains code of platform
+#
+# Everytime we want to delivery new platform version, we only need to build this
+#   Dockerfile and publish this image, allow to deploy new platform version 
+#   without affect current running webserver
+#
+# This image can also hold jars file, which is build from build tools.
+#
+# If you want to add jars into image, you should add script for copy from jar's
+#   target folder to image's `jars` folder
+#   like below commented code.
+
+FROM ubuntu
+
+COPY cfg   /root/airflow/cfg
+COPY dags  /root/airflow/dags
+COPY py    /root/airflow/py
+
+
+# COPY tmp-dir/jars /root/airflow/jars
+
+# COPY docker-airflow/variables.json     /root/airflow/variables/variables.default.json
+
+COPY docker-airflow/airflow_code.entrypoint.sh /entrypoint.sh
+
+RUN chmod u+x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+CMD /bin/bash
