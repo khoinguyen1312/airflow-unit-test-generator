@@ -26,7 +26,14 @@ Try something like:
 - Check code different by Git tools or simply `git diff`.
 - Now, we should see the different in `pytest/airflow/dags/auto_generate_result/code/echo_dag_auto_test.py`.
 
+**Before**
+![Generate Test](./before.png)
+
+**Generating**
 ![Generate Test](./generate_test.gif)
+
+**After**
+![Generate Test](./after.png)
 
 ## Commands
 
